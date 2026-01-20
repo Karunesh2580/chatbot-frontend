@@ -9,14 +9,19 @@ function Chat() {
     if (!prompt.trim()) return;
     setLoading(true);
 
-    const res = await fetch("http://127.0.0.1:9000/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
-    });
+    try {
+      const res = await fetch("https://chatbot-backend-1-n1nf.onrender.com/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+      });
 
-    const data = await res.json();
-    setMessages([...messages, { user: prompt, bot: data.response }]);
+      const data = await res.json();
+      setMessages([...messages, { user: prompt, bot: data.response }]);
+    } catch (error) {
+      setMessages([...messages, { user: prompt, bot: "⚠️ Error connecting to backend" }]);
+    }
+
     setPrompt("");
     setLoading(false);
   };
